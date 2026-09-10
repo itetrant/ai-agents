@@ -22,12 +22,13 @@ function fail(res, status, code, message, details) {
 }
 
 function paginationMeta(page, limit, total) {
+  // Ten truong JSON dung snake_case theo STD-API-SD-001 muc 4.5.
   return {
     pagination: {
       page,
       limit,
       total,
-      totalPages: Math.max(1, Math.ceil(total / limit)),
+      total_pages: Math.max(1, Math.ceil(total / limit)),
     },
   };
 }

@@ -13,7 +13,16 @@ export default function WebGuide() {
         <li>Goi API qua 1 lop <code>api client</code> dung chung (xem vi du ben duoi), khong <code>fetch</code> rai rac trong component.</li>
       </ul>
 
-      <h2>Vi du: goi API theo dung API Standard</h2>
+      <h2>Vi du: goi API (endpoint <code>/api/v1/projects</code>)</h2>
+      <p>
+        Vi du duoi day dung cho endpoint theo <em>quy uoc REST bo sung</em>{' '}
+        cua nhom dev (envelope <code>data</code>/<code>error</code>) - xem{' '}
+        <a href="#/api-standard">API Standard</a>. Voi endpoint chinh thuc co
+        multi-tenant/multi-channel (STD-API-SD-001 muc 5), client can gui
+        them header <code>X-Channel-Id</code> khi ghi du lieu tren token
+        nhieu channel; tenant/channel/scope thi do backend (Kong/BFF) chen,
+        frontend khong tu gui.
+      </p>
       <pre className="code-block">{`// src/lib/apiClient.js
 async function apiFetch(path, options = {}) {
   const res = await fetch(\`/api/v1\${path}\`, {

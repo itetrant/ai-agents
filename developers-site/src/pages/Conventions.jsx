@@ -9,8 +9,20 @@ export default function Conventions() {
       <ul>
         <li>File React component: <code>PascalCase.jsx</code> (vd. <code>ProjectList.jsx</code>).</li>
         <li>File Node thuan (route, lib, middleware): <code>camelCase.js</code>.</li>
-        <li>Bien &amp; ham: <code>camelCase</code>. Hang so co dinh: <code>UPPER_SNAKE_CASE</code>.</li>
-        <li>Field trong JSON API: <code>camelCase</code> (dong nhat voi JavaScript o ca 2 phia).</li>
+        <li>Bien &amp; ham (JavaScript): <code>camelCase</code>. Hang so co dinh: <code>UPPER_SNAKE_CASE</code>.</li>
+        <li>
+          Field trong JSON API: <strong>snake_case</strong> (<code>order_id</code>,{' '}
+          <code>created_at</code>, <code>total_amount</code>) - bat buoc theo{' '}
+          <a href="#/api-standard">API Standard</a> (STD-API-SD-001 muc 4.5),
+          ap dung ca cho request lan response body. Chi bien/ham noi bo trong
+          code JS moi dung camelCase.
+        </li>
+        <li>
+          Ten service (functional-name): chu thuong, phan cach bang dau gach
+          ngang, dang <code>{'<domain>-<component>'}</code> (vd.{' '}
+          <code>order-management</code>) - xem danh muc domain trong{' '}
+          <a href="#/api-standard">API Standard</a> muc 4.
+        </li>
       </ul>
 
       <h2>Module system</h2>
