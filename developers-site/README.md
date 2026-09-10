@@ -35,6 +35,30 @@ Doi port bang bien moi truong `PORT`. Bien `PROMETHEUS_IPS` (danh sach IP,
 phan cach boi dau phay) gioi han truy cap `/metrics` - de trong chi de test
 cuc bo, PROD bat buoc phai cau hinh.
 
+## Deploy len Vercel
+
+Repo da co san `vercel.json` + `api/index.js` (serverless entrypoint bao
+`server/app.js`) - `public/` duoc build va serve tinh, `/api/*` va `/metrics`
+chay qua serverless function.
+
+**Cach 1 - qua dashboard (khuyen nghi, khong can token):**
+1. Vao vercel.com &rarr; New Project &rarr; import repo GitHub nay.
+2. Set **Root Directory** = `developers-site`.
+3. Build Command / Output Directory de mac dinh (da khai bao trong `vercel.json`).
+4. Deploy - moi lan push len nhanh nay se tu dong deploy lai.
+
+**Cach 2 - qua CLI:**
+```bash
+cd developers-site
+npx vercel --prod
+```
+
+Luu y: cac resource mau (`orders`, `projects`) luu trong bo nho (in-memory
+array) - tren Vercel moi serverless invocation co the chay tren instance
+khac nhau nen du lieu tao qua `POST` **khong dam bao ton tai** giua cac
+request. Day la gioi han chap nhan duoc cho site demo/tai lieu; mot service
+that phai dung database ben ngoai.
+
 ## Cau truc
 
 ```
