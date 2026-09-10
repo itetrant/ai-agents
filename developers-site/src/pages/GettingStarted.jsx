@@ -1,6 +1,61 @@
 import React from 'react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export default function GettingStarted() {
+  const { lang } = useLanguage();
+
+  if (lang === 'en') {
+    return (
+      <article className="doc">
+        <h1>Getting Started</h1>
+
+        <h2>1. Environment requirements</h2>
+        <ul>
+          <li>Node.js &ge; 18 (LTS)</li>
+          <li>npm &ge; 9</li>
+          <li>Git</li>
+        </ul>
+
+        <h2>2. Standard folder structure for a new project</h2>
+        <pre className="code-block">{`project-name/
+  server/            # Node.js + Express (CommonJS)
+    index.js          # entrypoint, app bootstrap, mounts routes
+    routes/           # one router file per resource
+    middleware/        # auth, validate, error handler
+    lib/                # shared helpers (envelope, logger, ...)
+  src/                # React app
+    index.js            # ReactDOM.createRoot(...)
+    App.jsx              # routing
+    components/           # shared components, no business logic
+    pages/                 # 1 file = 1 screen/route
+  public/             # index.html + built bundle
+  package.json
+  webpack.config.js
+  .babelrc`}</pre>
+
+        <h2>3. Install</h2>
+        <pre className="code-block">{`npm install`}</pre>
+
+        <h2>4. Run dev (frontend watch + backend together)</h2>
+        <pre className="code-block">{`npm run dev`}</pre>
+        <p>
+          This command runs <code>webpack --watch</code> (rebuilds
+          <code> public/bundle.js</code> whenever you edit React code) and{' '}
+          <code>node server/index.js</code> (Express serves both the website and the API) in parallel.
+        </p>
+
+        <h2>5. Build production</h2>
+        <pre className="code-block">{`npm run build   # webpack --mode production -> public/bundle.js
+npm run server  # node server/index.js`}</pre>
+
+        <div className="callout">
+          The server runs on <code>http://localhost:4000</code> by default. Change the port via
+          the <code>PORT</code> environment variable.
+        </div>
+      </article>
+    );
+  }
+
   return (
     <article className="doc">
       <h1>Bắt đầu</h1>

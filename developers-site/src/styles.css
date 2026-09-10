@@ -89,8 +89,14 @@ body {
   color: var(--muted);
 }
 
-.theme-toggle {
-  margin-left: auto;
+.toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.theme-toggle,
+.lang-toggle {
   width: 32px;
   height: 32px;
   flex-shrink: 0;
@@ -107,8 +113,16 @@ body {
   padding: 0;
 }
 
-.theme-toggle:hover {
+.lang-toggle {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.theme-toggle:hover,
+.lang-toggle:hover {
   border-color: var(--accent);
+  color: var(--accent);
 }
 
 .sidebar nav {
