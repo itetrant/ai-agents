@@ -1,13 +1,14 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import ThemeToggle from './ThemeToggle';
 
 const links = [
-  { to: '/', label: 'Tong quan', end: true },
-  { to: '/bat-dau', label: 'Bat dau' },
-  { to: '/huong-dan-web', label: 'Huong dan Web' },
-  { to: '/huong-dan-app', label: 'Huong dan App/Backend' },
+  { to: '/', label: 'Tổng quan', end: true },
+  { to: '/bat-dau', label: 'Bắt đầu' },
+  { to: '/huong-dan-web', label: 'Hướng dẫn Web' },
+  { to: '/huong-dan-app', label: 'Hướng dẫn App/Backend' },
   { to: '/api-standard', label: 'API Standard' },
-  { to: '/quy-uoc', label: 'Quy uoc & Code style' },
+  { to: '/quy-uoc', label: 'Quy ước & Code style' },
 ];
 
 export default function Layout({ children }) {
@@ -18,8 +19,9 @@ export default function Layout({ children }) {
           <span className="brand-mark">MM</span>
           <div>
             <div className="brand-title">developers.mmvietnam.com</div>
-            <div className="brand-sub">Cong dev noi bo</div>
+            <div className="brand-sub">Cổng dev nội bộ</div>
           </div>
+          <ThemeToggle />
         </div>
         <nav>
           {links.map((link) => (

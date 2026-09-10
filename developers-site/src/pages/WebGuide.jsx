@@ -3,25 +3,25 @@ import React from 'react';
 export default function WebGuide() {
   return (
     <article className="doc">
-      <h1>Huong dan phat trien Web (React)</h1>
+      <h1>Hướng dẫn phát triển Web (React)</h1>
 
-      <h2>Nguyen tac chung</h2>
+      <h2>Nguyên tắc chung</h2>
       <ul>
-        <li>Function component + hooks. Khong dung class component cho code moi.</li>
-        <li>Moi file <code>pages/*.jsx</code> tuong ung 1 route, khong nhet nhieu man hinh vao 1 file.</li>
-        <li><code>components/</code> chi chua component thuan UI, khong tu goi API truc tiep - nhan du lieu qua props.</li>
-        <li>Goi API qua 1 lop <code>api client</code> dung chung (xem vi du ben duoi), khong <code>fetch</code> rai rac trong component.</li>
+        <li>Function component + hooks. Không dùng class component cho code mới.</li>
+        <li>Mỗi file <code>pages/*.jsx</code> tương ứng 1 route, không nhét nhiều màn hình vào 1 file.</li>
+        <li><code>components/</code> chỉ chứa component thuần UI, không tự gọi API trực tiếp - nhận dữ liệu qua props.</li>
+        <li>Gọi API qua 1 lớp <code>api client</code> dùng chung (xem ví dụ bên dưới), không <code>fetch</code> rải rác trong component.</li>
       </ul>
 
-      <h2>Vi du: goi API (endpoint <code>/api/v1/projects</code>)</h2>
+      <h2>Ví dụ: gọi API (endpoint <code>/api/v1/projects</code>)</h2>
       <p>
-        Vi du duoi day dung cho endpoint theo <em>quy uoc REST bo sung</em>{' '}
-        cua nhom dev (envelope <code>data</code>/<code>error</code>) - xem{' '}
-        <a href="#/api-standard">API Standard</a>. Voi endpoint chinh thuc co
-        multi-tenant/multi-channel (STD-API-SD-001 muc 5), client can gui
-        them header <code>X-Channel-Id</code> khi ghi du lieu tren token
-        nhieu channel; tenant/channel/scope thi do backend (Kong/BFF) chen,
-        frontend khong tu gui.
+        Ví dụ dưới đây dùng cho endpoint theo <em>quy ước REST bổ sung</em>{' '}
+        của nhóm dev (envelope <code>data</code>/<code>error</code>) - xem{' '}
+        <a href="#/api-standard">API Standard</a>. Với endpoint chính thức có
+        multi-tenant/multi-channel (STD-API-SD-001 mục 5), client cần gửi
+        thêm header <code>X-Channel-Id</code> khi ghi dữ liệu trên token
+        nhiều channel; tenant/channel/scope thì do backend (Kong/BFF) chèn,
+        frontend không tự gửi.
       </p>
       <pre className="code-block">{`// src/lib/apiClient.js
 async function apiFetch(path, options = {}) {
@@ -36,18 +36,18 @@ async function apiFetch(path, options = {}) {
   const body = await res.json();
 
   if (!res.ok) {
-    // API Standard: loi luon nam trong body.error = { code, message, details }
-    throw new Error(body.error?.message || 'Da co loi xay ra');
+    // API Standard: lỗi luôn nằm trong body.error = { code, message, details }
+    throw new Error(body.error?.message || 'Đã có lỗi xảy ra');
   }
 
-  return body.data; // API Standard: du lieu thanh cong luon nam trong body.data
+  return body.data; // API Standard: dữ liệu thành công luôn nằm trong body.data
 }
 
 export function getProjects(page = 1, limit = 10) {
   return apiFetch(\`/projects?page=\${page}&limit=\${limit}\`);
 }`}</pre>
 
-      <h2>Component mau</h2>
+      <h2>Component mẫu</h2>
       <pre className="code-block">{`import React, { useEffect, useState } from 'react';
 import { getProjects } from '../lib/apiClient';
 
@@ -72,23 +72,23 @@ export default function ProjectList() {
 
       <h2>Routing</h2>
       <p>
-        Dung <code>react-router-dom</code>. Voi site tinh phuc vu boi Express nhu
-        du an mau nay, uu tien <code>HashRouter</code> de khong can cau hinh
-        catch-all route o server; voi SPA co server-side rendering hoac reverse
-        proxy rieng, dung <code>BrowserRouter</code>.
+        Dùng <code>react-router-dom</code>. Với site tĩnh phục vụ bởi Express như
+        dự án mẫu này, ưu tiên <code>HashRouter</code> để không cần cấu hình
+        catch-all route ở server; với SPA có server-side rendering hoặc reverse
+        proxy riêng, dùng <code>BrowserRouter</code>.
       </p>
 
       <h2>State &amp; form</h2>
       <ul>
-        <li>State cuc bo: <code>useState</code>/<code>useReducer</code>.</li>
-        <li>State dung chung nhieu man hinh: React Context, chi tach store rieng (Redux/Zustand) khi that su can.</li>
-        <li>Validate form phia client truoc, nhung server van phai validate lai (khong tin client).</li>
+        <li>State cục bộ: <code>useState</code>/<code>useReducer</code>.</li>
+        <li>State dùng chung nhiều màn hình: React Context, chỉ tách store riêng (Redux/Zustand) khi thật sự cần.</li>
+        <li>Validate form phía client trước, nhưng server vẫn phải validate lại (không tin client).</li>
       </ul>
 
       <h2>Testing &amp; linting</h2>
       <ul>
-        <li>ESLint + Prettier bat buoc cho moi PR.</li>
-        <li>Uu tien test hanh vi nguoi dung (React Testing Library) hon test chi tiet implementation.</li>
+        <li>ESLint + Prettier bắt buộc cho mọi PR.</li>
+        <li>Ưu tiên test hành vi người dùng (React Testing Library) hơn test chi tiết implementation.</li>
       </ul>
     </article>
   );
