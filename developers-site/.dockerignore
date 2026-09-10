@@ -1,0 +1,14 @@
+node_modules
+public/bundle.js
+public/bundle.js.map
+public/bundle.js.LICENSE.txt
+.git
+.gitignore
+npm-debug.log
+Dockerfile
+.dockerignore
+deployment.yaml
+Jenkinsfile
+README.md
+vercel.json
+api

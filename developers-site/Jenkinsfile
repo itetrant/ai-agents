@@ -1,0 +1,148 @@
+pipeline {
+    agent any
+    environment {
+        REGISTRY_URL = "mmregistry.mmvietnam.com:5000"
+        IMAGE_NAME = "developers-site"
+        APP_NAME = "developers-site"
+        APP_DIR = "developers-site"
+        GIT_CREDENTIALS_ID = "itetrant"
+        DOCKER_CREDENTIALS_ID = "mmregistry-dev"
+        KUBE_CONFIG_CREDENTIALS_ID = "kubeconfig-base64"
+        NAMESPACE = "default"
+        DEPLOYMENT_FILE = "${WORKSPACE}/${APP_DIR}/deployment.yaml"
+        EMAIL_RECIPIENTS = "tra.nguyen-thanh@mmvietnam.com,mmvn.mis.inf@mmvietnam.com"
+        VERSION_FILE = "VERSION"
+    }
+    stages {
+        stage('Clone Repository') {
+            steps {
+                // Monorepo: developers-site/ la 1 thu muc con trong repo ai-agents.
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/itetrant/ai-agents.git',
+                        credentialsId: GIT_CREDENTIALS_ID
+                    ]]
+                ])
+            }
+        }
+
+        stage('Set Version') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        def tagsJson = sh(script: """
+                            curl -u "$DOCKER_USER:$DOCKER_PASS" -s https://$REGISTRY_URL/v2/$IMAGE_NAME/tags/list || echo '{}'
+                        """, returnStdout: true).trim()
+
+                        def lastVersion = "000"
+                        if (tagsJson.contains("\"tags\"")) {
+                            lastVersion = sh(script: """
+                                echo '$tagsJson' | jq -r '.tags | map(select(test("^[0-9]+\$"))) | sort | .[-1] // "000"'
+                            """, returnStdout: true).trim()
+                        }
+
+                        echo "Last version: $lastVersion"
+                        def newVersion = (lastVersion.isNumber() ? lastVersion.toInteger() : 0) + 1
+                        env.VERSION = String.format("%03d", newVersion)
+                        echo "New version: $VERSION"
+                        sh "echo $VERSION > $VERSION_FILE"
+                    }
+                }
+            }
+        }
+
+        stage('Build and Push Docker Image') {
+            steps {
+                script {
+                    // Docker build context la thu muc developers-site (chua Dockerfile,
+                    // package.json, server/, src/, public/).
+                    sh "docker build -t $REGISTRY_URL/$IMAGE_NAME:$VERSION $APP_DIR"
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $REGISTRY_URL"
+                        sh "docker push $REGISTRY_URL/$IMAGE_NAME:$VERSION"
+                    }
+                }
+            }
+        }
+
+        stage('Update Deployment YAML') {
+            steps {
+                script {
+                    sh """
+                        sed -i 's|image: $REGISTRY_URL/$IMAGE_NAME:.*|image: $REGISTRY_URL/$IMAGE_NAME:$VERSION|' $DEPLOYMENT_FILE
+                        cat $DEPLOYMENT_FILE
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: KUBE_CONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
+                        sh "kubectl apply -f $DEPLOYMENT_FILE --kubeconfig=$KUBECONFIG"
+                        sh "kubectl rollout status deployment/$APP_NAME -n $NAMESPACE --kubeconfig=$KUBECONFIG"
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            script {
+                withCredentials([file(credentialsId: KUBE_CONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
+                    def serviceIP = ""
+                    def retries = 12
+                    for (int i = 0; i < retries; i++) {
+                        serviceIP = sh(
+                            script: "kubectl get svc $APP_NAME -n $NAMESPACE -o jsonpath='{.status.loadBalancer.ingress[0].ip}' --kubeconfig=$KUBECONFIG || echo ''",
+                            returnStdout: true
+                        ).trim()
+
+                        if (serviceIP && serviceIP != "''") {
+                            break
+                        }
+                        sleep 5
+                    }
+
+                    if (!serviceIP || serviceIP == "''") {
+                        serviceIP = "Chua co IP (LoadBalancer chua cap IP sau 60s)"
+                    }
+
+                    echo "Service External IP: ${serviceIP}"
+
+                    emailext(
+                        subject: "Jenkins Deployment SUCCESS: ${JOB_NAME} #${BUILD_NUMBER}",
+                        body: """
+                            Deploy thanh cong!
+                            - Job: ${JOB_NAME}
+                            - Build Number: ${BUILD_NUMBER}
+                            - Image: $REGISTRY_URL/$IMAGE_NAME:$VERSION
+                            - Namespace: $NAMESPACE
+                            - LoadBalancer IP: ${serviceIP}
+                        """,
+                        to: EMAIL_RECIPIENTS
+                    )
+                }
+            }
+        }
+
+        failure {
+            script {
+                emailext(
+                    subject: "Jenkins Deployment FAILED: ${JOB_NAME} #${BUILD_NUMBER}",
+                    body: """
+                        Deploy that bai!
+                        - Job: ${JOB_NAME}
+                        - Build Number: ${BUILD_NUMBER}
+                        - Image co gang deploy: $REGISTRY_URL/$IMAGE_NAME:$VERSION
+                        - Namespace: $NAMESPACE
+                        - Kiem tra log tren Jenkins de biet them chi tiet.
+                    """,
+                    to: EMAIL_RECIPIENTS
+                )
+            }
+        }
+    }
+}
