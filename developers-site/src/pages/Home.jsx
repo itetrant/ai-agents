@@ -5,30 +5,40 @@ export default function Home() {
     <article className="doc">
       <h1>developers.mmvietnam.com</h1>
       <p className="lead">
-        Cong thong tin danh cho developer noi bo mmvietnam: huong dan cach phat
-        trien app/web, va bo <strong>chuan API (API Standard)</strong> dung
-        chung cho moi service.
+        Cong thong tin danh cho developer noi bo MM Mega Market Vietnam
+        (MMVN): huong dan cach phat trien app/web, va{' '}
+        <strong>API Standard</strong> (STD-API-SD-001 v1.1) - chuan bat buoc
+        cho moi API service cua MMVN.
       </p>
 
-      <h2>Stack ky thuat de xuat</h2>
+      <h2>Ha tang &amp; nen tang dung chung cua MMVN</h2>
       <div className="cards">
         <div className="card">
-          <h3>Backend</h3>
-          <p>Node.js + Express, module CommonJS (require/module.exports).</p>
+          <h3>Service Discovery</h3>
+          <p>Consul. Moi service tu dang ky/huy dang ky, goi nhau qua DNS name - khong hard-code IP.</p>
         </div>
         <div className="card">
-          <h3>Frontend</h3>
-          <p>React (function component + hooks), react-router-dom cho routing.</p>
+          <h3>Kong API Gateway</h3>
+          <p>Entrypoint bat buoc cho moi API public va payment; xac thuc OAuth2, chen X-Authenticated-Scope.</p>
         </div>
         <div className="card">
-          <h3>Giao tiep du lieu</h3>
-          <p>REST JSON theo API Standard, versioning qua path (/api/v1/...).</p>
+          <h3>Kafka</h3>
+          <p>Messaging chuan cho giao tiep bat dong bo giua cac service, kem quy uoc topic/DLQ.</p>
         </div>
         <div className="card">
-          <h3>Build tooling</h3>
-          <p>Webpack + Babel cho frontend, Node chay truc tiep cho server.</p>
+          <h3>Prometheus + log-service</h3>
+          <p>Moi service expose /metrics (noi bo) va day log tap trung ve log-service (Elasticsearch).</p>
         </div>
       </div>
+
+      <h2>Ngon ngu backend duoc ho tro</h2>
+      <p>
+        API Standard khong rang buoc mot ngon ngu duy nhat - Node.js, .NET,
+        Python va Java deu co thu vien chinh thuc tuong ung cho OpenAPI docs
+        va Prometheus metrics (xem <a href="#/api-standard">API Standard</a>{' '}
+        muc 10-11). Vi du song trong site nay dung <strong>Node.js +
+        Express (CommonJS)</strong>; frontend minh hoa dung <strong>React</strong>.
+      </p>
 
       <h2>Bat dau tu dau?</h2>
       <ol>
@@ -48,8 +58,11 @@ export default function Home() {
       </ol>
 
       <div className="callout">
-        <strong>Luu y:</strong> Day la tai lieu best-practice noi bo, ap dung cho
-        moi du an moi cua mmvietnam tru khi du an co quy dinh rieng thay the.
+        <strong>Luu y:</strong> Cac muc trong <a href="#/api-standard">API
+        Standard</a> lay tu tai lieu chinh thuc STD-API-SD-001 v1.1 (bat
+        buoc). Rieng huong dan Web/App va phan "Quy uoc REST bo sung" la
+        best-practice do nhom dev de xuat cho nhung phan tai lieu chinh thuc
+        chua quy dinh - luon uu tien STD-API-SD-001 khi co xung dot.
       </div>
     </article>
   );
