@@ -221,13 +221,13 @@ export default function ApiStandard() {
       <table className="table">
         <thead><tr><th>channel_id</th><th>Sale Channel</th><th>Mo ta</th></tr></thead>
         <tbody>
-          <tr><td>0</td><td>Cash &amp; Carry</td><td>Kenh ban si tai trung tam</td></tr>
-          <tr><td>1</td><td>CCOD</td><td>Cash &amp; Carry On Demand</td></tr>
+          <tr><td>0</td><td>Cash &amp; Carry</td><td>Kenh ban le tai trung tam</td></tr>
+          <tr><td>1</td><td>CCOD</td><td>Credit &amp; Cash On Delivery</td></tr>
           <tr><td>2</td><td>B2B</td><td>Kenh khach hang doanh nghiep</td></tr>
-          <tr><td>3</td><td>Click &amp; Get</td><td>Dat truc tuyen, nhan tai trung tam</td></tr>
+          <tr><td>3</td><td>Click &amp; Get</td><td>Dat truc tuyen, https://online.mmvietnam.com</td></tr>
           <tr><td>4</td><td>Market Place</td><td>Kenh san thuong mai dien tu</td></tr>
           <tr><td>5</td><td>Telesale</td><td>Kenh ban qua dien thoai</td></tr>
-          <tr><td>6</td><td>Online BSM</td><td>Kenh truc tuyen Business Service Manager</td></tr>
+          <tr><td>6</td><td>Online BSM</td><td>Kenh truc tuyen Bs'Mart (closed)</td></tr>
           <tr><td>7</td><td>GiaTot</td><td>Kenh Gia Tot</td></tr>
         </tbody>
       </table>
