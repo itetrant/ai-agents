@@ -1,0 +1,34 @@
+{
+  "name": "developers-mmvietnam-site",
+  "version": "1.0.0",
+  "description": "developers.mmvietnam.com - huong dan phat trien app/web va chuan API noi bo (Node.js + React, CommonJS)",
+  "private": true,
+  "main": "server/index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch",
+    "server": "node server/index.js",
+    "dev": "concurrently \"npm:watch\" \"npm:server\"",
+    "start": "npm run build && npm run server"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "babel-loader": "^9.2.1",
+    "concurrently": "^9.1.0",
+    "css-loader": "^7.1.2",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4"
+  }
+}

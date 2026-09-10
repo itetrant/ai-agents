@@ -2,6 +2,8 @@
 
 A small team of specialist AI agents — built on the Claude API — that collaborate to design and build a full-stack application from a single project brief.
 
+See [`developers-site/`](./developers-site) for **developers.mmvietnam.com** — a Node.js/Express + React developer portal with app/web development guides and the internal REST API Standard (with a live example implementation).
+
 ## How it works
 
 ```
